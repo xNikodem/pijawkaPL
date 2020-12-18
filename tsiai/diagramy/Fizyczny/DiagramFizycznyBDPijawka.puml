@@ -1,0 +1,106 @@
+@startuml
+
+entity konto {
+    * id: serial
+    --
+    * id_grupy: unsigned bigint
+    * login: text(32)
+    * haslo: text
+    * data_utworzenia: timestamp
+}
+
+entity grupa {
+    * id: serial
+    --
+    * nazwa_grupy:text(64)
+}
+
+entity permisja {
+    * id: serial
+    --
+    * nazwa_permisji: text(64)
+}
+
+entity permisja_grupy{
+    * composite_key(id_grupy, id_permisji)
+    --
+    * id_grupy: unsigned bigint
+    * id_permisji: unsigned bigint
+}
+
+entity Dane_Uzytkownika{
+	* id_konta: unsigned bigint
+	* id_adresu: unsigned bigint
+	* Imie: text
+	* Nazwisko: text
+	* email: text
+	* nr_telefonu: int
+	* id_grupy: unsigned bigint
+}
+entity Adres_uzytkownika{
+	* id_adresu: serial
+	--
+	* miasto: text
+	* ulica: text
+	* nr_mieszkania: int
+	* nr_klatki: int
+	* kod_pocztowy: int
+	
+}
+
+entity Towar{
+	* id_towaru: serial
+	--
+	* Cena_towaru: float
+	* Nazwa_towaru: text
+	* Kategoria_towaru: text
+	* Pojemnosc: float
+	* Woltaz: float
+}
+entity Ogloszenie{
+	* id_ogloszenia: serial
+	--
+	* id_konta: unsigned bigint
+	* id_towaru: unsigned bigint
+	* Nazwa_oglsozenia: text
+}
+entity koszyk{
+	* id_koszyka: serial
+	--
+	* id_konta: unsigned bigint
+	* id_towaru: unsigned bigint
+	* ilosc_towaru: int
+}
+entity Zamowienie{
+	* id_zamowienia: serial
+	--
+	* id_konta: unsigned bigint
+	* id_koszyka: unsigned bigint
+	* Cena_zamowienia: float
+}
+entity Ocena{
+	* id_oceny: serial
+	--
+	* id_zamowienia: unsigned bigint
+	* id_ogloszenia: unsigned bigint
+	* id_konta: unsigned bigint
+	* ocena: int
+	* komentarz: text
+}
+
+grupa --|{ konto
+grupa --|{ permisja_grupy
+permisja --|{ permisja_grupy
+konto --|{ Ogloszenie
+konto --|{ koszyk
+konto --|{ Zamowienie
+konto --|{ Ocena
+Adres_uzytkownika --|{ Dane_Uzytkownika
+Towar --|{ Ogloszenie
+Towar --|{ koszyk
+koszyk --|{ Zamowienie
+Zamowienie --|{ Ocena
+Ogloszenie --|{ ocena
+
+
+@enduml
